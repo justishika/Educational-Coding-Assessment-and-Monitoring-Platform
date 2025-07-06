@@ -1,0 +1,525 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* CodeLab Pro Dark Theme */
+  --background: 222 14% 4%;
+  --background-secondary: 224 18% 6%;
+  --background-tertiary: 226 20% 8%;
+  --foreground: 210 100% 98%;
+  
+  /* Card backgrounds with subtle transparency */
+  --card: 224 18% 6%;
+  --card-foreground: 210 100% 98%;
+  --card-elevated: 226 20% 8%;
+  
+  /* Borders with low opacity */
+  --border: 226 20% 15%;
+  --border-accent: 226 20% 20%;
+  
+  /* Input styling */
+  --input: 224 18% 10%;
+  --input-border: 226 20% 15%;
+  
+  /* Muted elements */
+  --muted: 224 18% 12%;
+  --muted-foreground: 215 15% 65%;
+  
+  /* Accent colors - CodeLab Pro palette */
+  --pink: 330 100% 71%;        /* #ff5ec7 */
+  --purple: 260 90% 69%;       /* #a066f9 */
+  --blue: 215 82% 77%;         /* #7aa2f7 */
+  --cyan: 180 82% 77%;         /* #7dcfff */
+  --green: 158 64% 52%;        /* #9ece6a */
+  --yellow: 45 93% 68%;        /* #e0af68 */
+  --orange: 25 85% 68%;        /* #ff9e64 */
+  --red: 355 70% 69%;          /* #f7768e */
+  
+  /* Primary accent (pink gradient) */
+  --primary: var(--pink);
+  --primary-foreground: 210 100% 98%;
+  
+  /* Secondary accent (purple) */
+  --secondary: var(--purple);
+  --secondary-foreground: 210 100% 98%;
+  
+  /* Accent (blue) */
+  --accent: var(--blue);
+  --accent-foreground: 210 100% 98%;
+  
+  /* Destructive */
+  --destructive: var(--red);
+  --destructive-foreground: 210 100% 98%;
+  
+  /* Warning */
+  --warning: var(--orange);
+  --warning-foreground: 222 14% 4%;
+  
+  /* Success */
+  --success: var(--green);
+  --success-foreground: 222 14% 4%;
+  
+  /* Info */
+  --info: var(--cyan);
+  --info-foreground: 222 14% 4%;
+  
+  /* Popover */
+  --popover: 224 18% 6%;
+  --popover-foreground: 210 100% 98%;
+  
+  /* Ring for focus states */
+  --ring: var(--pink);
+  
+  /* Radius */
+  --radius: 0.75rem;
+  
+  /* Shadows with neon glow */
+  --shadow-glow-pink: 0 0 20px hsl(var(--pink) / 0.3);
+  --shadow-glow-purple: 0 0 20px hsl(var(--purple) / 0.3);
+  --shadow-glow-blue: 0 0 20px hsl(var(--blue) / 0.3);
+  
+  /* Gradients */
+  --gradient-pink-purple: linear-gradient(135deg, hsl(var(--pink)), hsl(var(--purple)));
+  --gradient-blue-purple: linear-gradient(135deg, hsl(var(--blue)), hsl(var(--purple)));
+  --gradient-background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--background-secondary)));
+  }
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--gradient-background);
+    min-height: 100vh;
+  }
+  
+  /* Custom scrollbar for webkit browsers */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-background-secondary;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--pink) / 0.6);
+  }
+}
+
+@layer components {
+  /* Glow effects */
+  .glow-pink {
+    box-shadow: var(--shadow-glow-pink);
+  }
+  
+  .glow-purple {
+    box-shadow: var(--shadow-glow-purple);
+  }
+  
+  .glow-blue {
+    box-shadow: var(--shadow-glow-blue);
+  }
+  
+  /* Gradient backgrounds */
+  .bg-gradient-pink-purple {
+    background: var(--gradient-pink-purple);
+  }
+  
+  .bg-gradient-blue-purple {
+    background: var(--gradient-blue-purple);
+  }
+  
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+  }
+  
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    background: var(--gradient-pink-purple);
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+  }
+  
+  /* Hover animations */
+  .hover-glow {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .hover-glow:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-pink);
+  }
+  
+  /* Card styles */
+  .card-elevated {
+    background: hsl(var(--card-elevated));
+    border: 1px solid hsl(var(--border-accent));
+    box-shadow: 0 4px 24px hsl(var(--background) / 0.5);
+  }
+  
+  /* Neon text effect */
+  .text-neon-pink {
+    color: hsl(var(--pink));
+    text-shadow: 0 0 10px hsl(var(--pink) / 0.5);
+  }
+  
+  .text-neon-purple {
+    color: hsl(var(--purple));
+    text-shadow: 0 0 10px hsl(var(--purple) / 0.5);
+  }
+  
+  .text-neon-blue {
+    color: hsl(var(--blue));
+    text-shadow: 0 0 10px hsl(var(--blue) / 0.5);
+  }
+  
+  /* Loading spinner with gradient */
+  .spinner-gradient {
+    border: 3px solid transparent;
+    border-top: 3px solid hsl(var(--pink));
+    border-right: 3px solid hsl(var(--purple));
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Pulse animation for live indicators */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 5px hsl(var(--green) / 0.5);
+    }
+    50% {
+      opacity: 0.8;
+      box-shadow: 0 0 15px hsl(var(--green) / 0.8);
+    }
+  }
+  
+  /* Floating animation */
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+  }
+}
+
+/* Monaco Editor dark theme integration */
+.monaco-editor {
+  background: hsl(var(--background-secondary)) !important;
+}
+
+.monaco-editor .margin {
+  background: hsl(var(--background-tertiary)) !important;
+}
+
+/* Toast notifications styling */
+.toast {
+  background: hsl(var(--card-elevated));
+  border: 1px solid hsl(var(--border-accent));
+  box-shadow: 0 8px 32px hsl(var(--background) / 0.8);
+}
+
+/* Form inputs with glow effect */
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 0 0 2px hsl(var(--pink) / 0.3);
+  border-color: hsl(var(--pink));
+}
+
+/* Custom selection styling */
+::selection {
+  background: hsl(var(--pink) / 0.3);
+  color: hsl(var(--foreground));
+}
+
+/* Enhanced Navigation Styles */
+.nav-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, hsl(var(--background-secondary)) 0%, hsl(var(--background-secondary))/80 100%);
+  backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border-accent));
+}
+
+.nav-card-hover:hover {
+  transform: translateY(-2px) scale(1.02);
+  background: linear-gradient(135deg, hsl(var(--background-secondary)) 0%, hsl(var(--background-secondary))/90 100%);
+  box-shadow: 0 8px 32px -8px hsl(var(--pink) / 0.3);
+  border-color: hsl(var(--pink) / 0.3);
+}
+
+.nav-card-active {
+  transform: scale(1.05);
+  background: var(--gradient-pink-purple) !important;
+  color: white !important;
+  box-shadow: 0 8px 32px -8px hsl(var(--pink) / 0.5);
+  border-color: transparent;
+}
+
+.nav-card-active:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 12px 40px -8px hsl(var(--pink) / 0.6);
+}
+
+/* Group navigation buttons */
+.nav-group-btn {
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.nav-group-btn.active {
+  background: linear-gradient(135deg, hsl(var(--pink) / 0.2) 0%, hsl(var(--purple) / 0.2) 100%);
+  color: hsl(var(--pink));
+  box-shadow: inset 0 1px 0 0 hsl(var(--pink) / 0.2);
+}
+
+/* Notification badges */
+.notification-badge {
+  animation: notification-pulse 2s infinite;
+}
+
+@keyframes notification-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 8px hsl(var(--red));
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 16px hsl(var(--red)), 0 0 24px hsl(var(--red) / 0.5);
+  }
+}
+
+/* Backdrop navigation */
+.nav-backdrop {
+  background: rgba(15, 15, 23, 0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid hsl(var(--border-accent));
+}
+
+/* Hover scale utilities */
+.hover\:scale-102:hover {
+  transform: scale(1.02);
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+/* Shadow glow effects for different colors */
+.shadow-glow-green {
+  box-shadow: 0 0 20px hsl(var(--green) / 0.3);
+}
+
+.shadow-glow-orange {
+  box-shadow: 0 0 20px hsl(var(--orange) / 0.3);
+}
+
+.shadow-glow-yellow {
+  box-shadow: 0 0 20px hsl(var(--yellow) / 0.3);
+}
+
+.shadow-glow-red {
+  box-shadow: 0 0 20px hsl(var(--red) / 0.3);
+}
+
+/* Iframe Security Styles */
+iframe {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+iframe[title="Student Codespace"] {
+  /* Additional security for VS Code iframe */
+  pointer-events: auto;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Prevent text selection in security-sensitive areas */
+.anti-cheat-protected {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Bottom notification animations */
+@keyframes slide-in-from-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-from-right 0.3s ease-out;
+}
+
+/* Tailwind animation classes for notifications */
+.slide-in-from-right-5 {
+  animation: slide-in-from-right 0.3s ease-out;
+}
+
+/* Enhanced Gradient Utilities */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Advanced Animation Classes */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--pink) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px hsl(var(--pink) / 0.8);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Cool Hover Effects */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px hsl(var(--foreground) / 0.1);
+}
+
+/* Glass Effects */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Neon Text Effects */
+.neon-text {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    0 0 20px currentColor;
+}
+
+/* Code Editor Syntax Highlighting */
+.syntax-keyword {
+  color: hsl(var(--blue));
+  font-weight: 600;
+}
+
+.syntax-string {
+  color: hsl(var(--green));
+}
+
+.syntax-comment {
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+
+.syntax-function {
+  color: hsl(var(--purple));
+  font-weight: 500;
+}
+
+/* Enhanced security indicators */
+.security-warning {
+  border: 2px solid hsl(var(--orange));
+  background: hsl(var(--orange) / 0.1);
+  color: hsl(var(--orange));
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.security-error {
+  border: 2px solid hsl(var(--red));
+  background: hsl(var(--red) / 0.1);
+  color: hsl(var(--red));
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Missing classes for Exam Monitor */
+.backdrop-blur-glass {
+  backdrop-filter: blur(12px);
+  background: hsl(var(--background) / 0.85);
+  border: 1px solid hsl(var(--border-accent) / 0.8);
+}
+
+.shadow-elevated {
+  box-shadow: 
+    0 4px 24px hsl(var(--background) / 0.5),
+    0 0 0 1px hsl(var(--border-accent) / 0.3),
+    0 8px 32px hsl(var(--foreground) / 0.08);
+}

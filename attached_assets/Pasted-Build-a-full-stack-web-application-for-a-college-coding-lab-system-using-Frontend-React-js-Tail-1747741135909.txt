@@ -1,0 +1,176 @@
+Build a full-stack web application for a college coding lab system using:
+
+Frontend: React.js + Tailwind CSS
+
+Backend: Node.js + Express.js
+
+Database: In-memory simulation (or MongoDB for logging)
+
+Features: Role-based login (admin, student), in-browser coding editor, code submission, anti-cheating tools, and real-time screen monitoring.
+
+💼 Requirements Overview
+Two user roles:
+
+student
+
+admin
+
+✅ Authentication
+Implement JWT-based login.
+
+Simulate user DB:
+
+js
+Copy
+Edit
+const users = [
+  { id: 1, email: "student@lab.com", password: "student123", role: "student" },
+  { id: 2, email: "admin@lab.com", password: "admin123", role: "admin" }
+];
+Login form should POST to /login.
+
+Store JWT in localStorage on frontend.
+
+Redirect to /student/dashboard or /admin/dashboard based on role.
+
+🎨 Frontend Requirements (React.js + Tailwind)
+Create project inside /frontend folder.
+
+Pages:
+
+Login.jsx → handles role-based login
+
+StudentDashboard.jsx → main coding interface
+
+AdminDashboard.jsx → submission + event logs view
+
+Use Monaco Editor (VS Code in the browser) in student dashboard.
+
+Provide subject selection, countdown timer, and submit button.
+
+Submit button sends code to /submit.
+
+Implement route guards: ProtectedRoute based on JWT & role.
+
+🔐 Anti-Cheating (Frontend)
+1. Tab Switch Detection
+Detect using:
+
+js
+Copy
+Edit
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    alert("Tab switch detected!");
+    axios.post("/log/tab-switch", { userId });
+  }
+});
+2. Copy-Paste Restriction
+Disable copy/paste inside Monaco Editor:
+
+js
+Copy
+Edit
+onPaste={(e) => e.preventDefault()}
+onCopy={(e) => e.preventDefault()}
+Alert the user on attempt.
+
+3. Periodic Screenshot Capture
+Use html2canvas to capture IDE area every 30 seconds:
+
+js
+Copy
+Edit
+html2canvas(document.getElementById("editor")).then(canvas => {
+  const data = canvas.toDataURL();
+  axios.post("/log/screenshot", { userId, image: data });
+});
+4. WebRTC-based Screen Sharing (Optional)
+Add a “Start Screen Share” button:
+
+js
+Copy
+Edit
+const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+videoRef.current.srcObject = stream;
+axios.post("/log/screen-share", { userId, started: true });
+🌐 Backend Requirements (Express.js)
+Create this in /backend folder.
+
+Core Routes:
+POST /login → validate user and return JWT
+
+GET /student/dashboard → protected route
+
+GET /admin/dashboard → admin-only route
+
+POST /submit → store code with timestamp
+
+POST /log/tab-switch → log anti-cheating event
+
+POST /log/screenshot → save base64 image + timestamp
+
+POST /log/screen-share → log screen sharing start/stop
+
+Middleware:
+authMiddleware.js to decode and validate JWT
+
+roleCheck.js to verify role before dashboard access
+
+Submission Model (simulate DB or use MongoDB):
+js
+Copy
+Edit
+{
+  userId,
+  subject,
+  code,
+  timestamp
+}
+Logs Model:
+js
+Copy
+Edit
+{
+  userId,
+  type: 'tab-switch' | 'screenshot' | 'screen-share',
+  data: (base64 for screenshot),
+  timestamp
+}
+📁 Folder Structure
+pgsql
+Copy
+Edit
+/frontend
+  ├── public/
+  ├── src/
+  │   ├── pages/
+  │   │   ├── Login.jsx
+  │   │   ├── StudentDashboard.jsx
+  │   │   └── AdminDashboard.jsx
+  │   ├── components/
+  │   ├── App.jsx
+  │   └── index.js
+
+/backend
+  ├── server.js
+  ├── routes/
+  │   ├── auth.js
+  │   ├── submit.js
+  │   └── logs.js
+  ├── middleware/
+  │   ├── authMiddleware.js
+  │   └── roleCheck.js
+  └── data/
+      ├── submissions.js
+      └── logs.js
+🚀 Final Output
+A complete full-stack app runnable in Replit
+
+Role-based dashboards
+
+Simulated code execution interface with anti-cheat logging
+
+Admin view to inspect logs and submissions
+
+Please generate working starter code for both frontend and backend, with all the features listed above.

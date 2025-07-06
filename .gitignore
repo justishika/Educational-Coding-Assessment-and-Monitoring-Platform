@@ -1,0 +1,42 @@
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+
+# Environment files and API keys
+.env
+.env.local
+.env.production
+.env.development
+.env.*
+
+# API keys and secrets
+*API_KEY*
+*SECRET*
+*TOKEN*
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+config/secrets.json
+secrets.json
+
+# MongoDB data files
+mongodb-data/
+screenshots/
+uploads/
+template-workspace/
+
+# Large files
+*.wt
+*.lock
+*.turtle
+*.log
+*.bson
+
+# Other sensitive files
+cookies.txt
+*.credentials

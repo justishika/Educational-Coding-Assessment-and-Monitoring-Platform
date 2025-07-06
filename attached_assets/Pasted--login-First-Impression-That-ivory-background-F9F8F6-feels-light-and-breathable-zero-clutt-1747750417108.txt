@@ -1,0 +1,71 @@
+🔐 /login
+First Impression:
+
+That ivory background (#F9F8F6) feels light and breathable — zero clutter.
+
+The navy buttons (#0F172A) = ✨ prestige + action. Feels serious but not aggressive.
+
+Input fields with soft shadows + padding give it a smooth, inviting vibe.
+
+Typography with charcoal text (#1F2937) — legible, modern, confident.
+
+Feels like:
+
+“I’m not just logging into a student portal… I’m entering a space that respects my time and data.”
+
+📝 /register (Student)
+Vibes:
+
+Same classy canvas.
+
+A bit of sage or muted gold (#C9B88C) on labels or icons? Nice subtle contrast.
+
+Signup form looks trustworthy, not overly techy. You could imagine an Ivy League CS program using this.
+
+Feels like:
+
+“This platform was designed by someone who knows good UX, not someone who just copied Bootstrap defaults.”
+
+🛡️ /admin/register
+Secret code field? LOVE IT.
+
+Adds a layer of exclusivity and security theater that just feels good for admins.
+
+Bonus points if there's a lock icon or tooltip next to the secret code field.
+
+Feels like:
+
+“You’ve got to know someone to get in here. This ain’t Gmail.”
+
+💻 /student/dashboard
+Aesthetic Monaco Editor in a card? Fire.
+
+The centered editor surrounded by white space = clean focus zone.
+
+The gold/olive accents framing the coding question make the "Write a prime-checking function" feel important, not just “meh, another assignment.”
+
+Dropdown + buttons = smooth interaction if they’re styled with the same button base.
+
+Feels like:
+
+“Minimalist coding dojo. No distractions. Just you, your thoughts, and the compiler.”
+
+📊 /student/grades
+Grade table in a polished box with muted borders = chef’s kiss.
+
+Bonus: If each row uses gold/green badge chips for grades like “A”, “B”, etc., it adds visual hierarchy without noise.
+
+Feels like:
+
+“I trust this platform to represent my academic record. It’s clean, consistent, and doesn’t scream ‘built overnight’.”
+
+🧑‍💼 /admin/dashboard
+Viewing submissions in a table with soft beige rows and navy headers? That’s elegance.
+
+Clicking to grade — if you have modals or popups with soft drop shadows — very product-like.
+
+The “View Grades” section using dropdown search = great for fast reviews.
+
+Feels like:
+
+“I’m managing this lab session like an editor reviewing papers at The New Yorker.”

@@ -1,0 +1,67 @@
+Now enhance the **frontend** of the college coding lab system you just generated.
+
+🧑‍🎓 For students:
+- Add a **sign-up page** (`/register`) with input fields: name, email, password.
+- After sign-up, redirect to login.
+- On the `StudentDashboard`:
+  - Use a **Monaco Editor** instance in a centered card layout.
+  - At the top of the editor, display this one-line coding question:
+    **"Write a function to check if a number is prime."**
+  - Add a **dropdown to choose subject** (e.g., OS, Java, Networking).
+  - Below the editor, include:
+    - A **Submit Code** button
+    - A **View Previous Scores** button
+  - When clicked, “View Previous Scores” should fetch data from `/student/grades` and show past submissions with grades in a table format.
+  - Use a **professional, refined design theme** with TailwindCSS:
+    - **Color palette:** 
+      - Background: `#F9F8F6` (ivory/cream)
+      - Primary text: `#1F2937` (rich charcoal gray)
+      - Accent buttons: `#0F172A` (navy black), hover `#1E293B`
+      - Secondary: muted golds like `#C9B88C` or olive/sage `#8C977A`
+      - Borders: `#E5E7EB` (light cool gray)
+    - **Typography:** Use `font-serif` or `font-sans` with class for elegance (`text-lg`, `font-medium`)
+    - **Layout:** Spacious white cards with subtle borders and drop shadows
+    - Clean cards and spacing (`p-6`, `rounded-2xl`, `shadow-sm`, `bg-white`)
+
+🧑‍💼 For admin:
+- Add an **admin registration page** (`/admin/register`) with email, password, and secret code field (to prevent public sign-ups).
+- AdminDashboard enhancements:
+  - Show a **list of submitted codes** with student names and subjects.
+  - Allow clicking on each submission to:
+    - **View the code**
+    - **Enter a grade** (dropdown or input)
+    - **Submit grade** (POST to `/admin/grade`)
+  - Add a **View Student Grades** section:
+    - Input student email or select from dropdown
+    - Fetch and display that student’s grading history via `/admin/grades/:email`
+  - Keep the layout clean and elegant using the same color palette:
+    - Creamy white backgrounds
+    - Olive green for headings
+    - Subtle gold highlights for buttons or grades
+    - Navy and muted charcoal for primary text
+    - Use rounded inputs and polished spacing (`space-y-4`, `mt-6`, `px-4 py-2`)
+
+💄 Styling Instructions:
+- Use Tailwind utility classes to:
+  - Make buttons rounded (`rounded-lg`)
+  - Add spacing (`space-y-4`, `mt-6`)
+  - Clean and modern input fields with focus rings and soft shadows
+- Keep the interface minimal, elegant, and responsive
+- Use components for:
+  - `InputField.jsx`
+  - `GradeCard.jsx`
+  - `SubmissionTable.jsx`
+
+🛠 API endpoints to support:
+- `POST /register` – student registration
+- `POST /admin/register` – admin registration with secret code validation
+- `GET /student/grades` – get logged-in student’s past submissions and scores
+- `POST /admin/grade` – submit grade for a code submission
+- `GET /admin/grades/:email` – view all grades for a student
+
+🧠 Additional:
+- Ensure proper role checking using stored JWT in all routes
+- If not logged in, redirect to `/login`
+- Use `axios.interceptors` to attach JWT to all outgoing requests
+
+Please update the **frontend only** as described above, using the refined and professional color palette and styling.

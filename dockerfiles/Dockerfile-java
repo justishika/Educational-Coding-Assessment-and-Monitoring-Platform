@@ -1,0 +1,14 @@
+FROM codercom/code-server:4.22.1
+
+USER root
+RUN apt update && apt install -y openjdk-17-jdk && apt clean
+
+USER coder
+WORKDIR /home/coder/project
+
+# NO config.yaml — let CLI control everything
+# NO password config in config.yaml
+
+RUN echo "// Java VS Code via iframe" > /home/coder/project/Main.java
+
+CMD ["code-server"]
