@@ -847,6 +847,71 @@ class PuppeteerScreenshotService {
         console.log('⚠️ Editor detection timeout, proceeding with screenshot anyway');
       }
 
+      // Enhanced active tab detection and focus
+      console.log('🎯 Ensuring active tab and editor are properly focused...');
+      try {
+        await frameContext.evaluate(() => {
+          // Find the currently active/selected tab
+          let activeTab = document.querySelector('.tab.active .label-name, .tab.selected .label-name, .tab[aria-selected="true"] .label-name');
+          
+          if (!activeTab) {
+            // If no active tab found, find the last clicked tab or most recently opened
+            const allTabs = document.querySelectorAll('.tab .label-name');
+            if (allTabs.length > 0) {
+              // Prefer tabs with actual file content (not Welcome/Get Started)
+              for (let tab of allTabs) {
+                const tabText = tab.textContent || '';
+                if (tabText.includes('.js') || tabText.includes('.py') || 
+                    tabText.includes('.java') || tabText.includes('.cpp') ||
+                    tabText.includes('.html') || tabText.includes('.css') ||
+                    tabText.includes('hell') || tabText.includes('student') ||
+                    tabText.includes('work') || tabText.includes('code') ||
+                    (!tabText.includes('Welcome') && !tabText.includes('Get Started'))) {
+                  activeTab = tab;
+                  break;
+                }
+              }
+              // If still no good tab found, use the first one
+              if (!activeTab) activeTab = allTabs[0];
+            }
+          }
+          
+          if (activeTab && activeTab instanceof HTMLElement) {
+            console.log('🎯 Found active tab:', activeTab.textContent);
+            // Click on the tab to ensure it's active
+            const tabContainer = activeTab.closest('.tab');
+            if (tabContainer && tabContainer instanceof HTMLElement) {
+              tabContainer.click();
+              console.log('🎯 Clicked on tab to activate it');
+            }
+          }
+          
+          // Give a moment for the tab to become active
+          setTimeout(() => {
+            // Focus on the editor content area
+            const editorTextArea = document.querySelector('.monaco-editor.focused textarea, .monaco-editor textarea, .monaco-editor .inputarea');
+            if (editorTextArea && editorTextArea instanceof HTMLElement) {
+              editorTextArea.focus();
+              console.log('🎯 Focused on editor text area');
+            }
+            
+            // Click on the visible code content to ensure cursor is positioned
+            const codeLines = document.querySelector('.monaco-editor .view-lines');
+            if (codeLines && codeLines instanceof HTMLElement) {
+              codeLines.click();
+              console.log('🎯 Clicked on code content area');
+            }
+          }, 500);
+        });
+        
+        // Wait for the focus changes to take effect
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        console.log('✅ Active tab and editor focus optimization complete');
+      } catch (focusError) {
+        console.log('⚠️ Tab focus optimization failed, proceeding anyway:', focusError);
+      }
+
       // Create screenshots directory
       const screenshotsDir = path.join(process.cwd(), 'screenshots');
       if (!fs.existsSync(screenshotsDir)) {
@@ -857,6 +922,38 @@ class PuppeteerScreenshotService {
       const filePath = path.join(screenshotsDir, filename);
 
       console.log(`📸 Capturing screenshot at ${screenSize.width}x${screenSize.height}...`);
+      
+      // Focus on the active editor tab and ensure it's visible
+      await frameContext.evaluate(() => {
+        // Find the active tab (the one that's currently selected)
+        const activeTab = document.querySelector('.tab.active, .tab.selected, .tab[aria-selected="true"]');
+        if (activeTab && activeTab instanceof HTMLElement) {
+          activeTab.click();
+          console.log('🎯 Clicked on active tab to ensure it\'s focused');
+        }
+        
+        // Focus on the editor area to make sure it's active
+        const editor = document.querySelector('.monaco-editor, .monaco-editor-background, .editor-instance');
+        if (editor && editor instanceof HTMLElement) {
+          editor.click();
+          editor.focus();
+          console.log('🎯 Focused on editor area');
+        }
+        
+        // Try to focus on the actual code content area
+        const codeArea = document.querySelector('.monaco-editor .view-lines, .monaco-editor textarea');
+        if (codeArea && codeArea instanceof HTMLElement) {
+          codeArea.click();
+          if ('focus' in codeArea) {
+            (codeArea as any).focus();
+          }
+          console.log('🎯 Focused on code editing area');
+        }
+      });
+      
+      // Wait a moment for the focus to take effect
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       const buffer = await frameContext.screenshot({
         encoding: 'base64',
         fullPage: true,
@@ -864,13 +961,18 @@ class PuppeteerScreenshotService {
         quality: 85
       }) as string;
 
-      const imageSize = Math.round((buffer.length * 3) / 4 / 1024); // Approximate KB from base64
+      // Save the screenshot to a file
+      const base64Data = buffer;
+      const imageBuffer = Buffer.from(base64Data, 'base64');
+      fs.writeFileSync(filePath, imageBuffer);
+
+      const imageSize = Math.round(imageBuffer.length / 1024); // Actual KB size
 
       console.log(`✅ Screenshot captured successfully: ${filename} (${imageSize}KB) at ${screenSize.width}x${screenSize.height}`);
 
       return {
         success: true,
-        filePath: `data:image/jpeg;base64,${buffer}`, // Store base64 data in filePath for compatibility
+        filePath, // Store actual file path for fs.readFileSync to work
         filename,
         timestamp: new Date().toISOString(),
         containerUrl,

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AntiCheat from "@/components/anti-cheat";
 // import ScreenCapture from "@/components/screen-capture"; // Disabled in favor of Puppeteer
+import PuppeteerScreenshot from "@/components/puppeteer-screenshot";
 import ScreenShare from "@/components/screen-share";
 import { useToast } from "@/hooks/use-toast";
 import CountdownTimer from "@/components/countdown-timer";
@@ -309,7 +310,14 @@ export default function StudentDashboard() {
 
   // Track workspace tab usage for enhanced anti-cheat
   useEffect(() => {
-    setIsInWorkspaceTab(activeTab === "workspace" && !!codespaceUrl);
+    const newIsInWorkspace = activeTab === "workspace" && !!codespaceUrl;
+    console.log('🔍 Workspace tracking update:', {
+      activeTab,
+      codespaceUrl: !!codespaceUrl,
+      newIsInWorkspace,
+      previousIsInWorkspace: isInWorkspaceTab
+    });
+    setIsInWorkspaceTab(newIsInWorkspace);
   }, [activeTab, codespaceUrl]);
 
 
@@ -443,7 +451,7 @@ export default function StudentDashboard() {
       setCodespaceUrl(data.url);
       toast({
         title: "🚀 Codespace Launched!",
-        description: "Your coding environment is ready. Screenshots will be captured automatically via Puppeteer.",
+        description: "Your coding environment is ready. Automatic Puppeteer screenshots will begin in 5 seconds.",
       });
     } else {
       toast({
@@ -757,6 +765,15 @@ export default function StudentDashboard() {
             });
           }
         }}
+      />
+      
+      {/* Puppeteer Auto-Screenshot Component */}
+      <PuppeteerScreenshot 
+        userId={user?.id}
+        codespaceUrl={codespaceUrl}
+        subject={subject}
+        interval={30000} // 30 seconds
+        isCodespaceActive={isInWorkspaceTab && !!codespaceUrl}
       />
       
       {/* Minimalist Header */}
@@ -1203,6 +1220,15 @@ export default function StudentDashboard() {
                       <div className="flex items-center text-green text-sm">
                         <div className="w-2 h-2 rounded-full bg-green mr-2"></div>
                         VS Code ready for capture
+                      </div>
+                    </div>
+                  )}
+                  
+                  {isInWorkspaceTab && codespaceUrl && (
+                    <div className="p-3 bg-blue/10 border border-blue/20 rounded-lg">
+                      <div className="flex items-center text-blue text-sm">
+                        <div className="w-2 h-2 rounded-full bg-blue animate-pulse mr-2"></div>
+                        Automatic Puppeteer capture active (30s interval)
                       </div>
                     </div>
                   )}
