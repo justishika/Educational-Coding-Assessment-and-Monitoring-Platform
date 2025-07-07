@@ -104,7 +104,7 @@ app.use((req, res, next) => {
 
   // Handle uncaught exceptions
   process.on('uncaughtException', async (error) => {
-    log('💥 Uncaught exception:', error);
+    log(`💥 Uncaught exception: ${error.message}`);
     await cleanupAllContainers();
     await mongoService.disconnect();
     await closeDatabase();
@@ -113,7 +113,7 @@ app.use((req, res, next) => {
 
   // Handle unhandled promise rejections
   process.on('unhandledRejection', async (reason, promise) => {
-    log('💥 Unhandled rejection at:', promise, 'reason:', reason);
+    log(`💥 Unhandled rejection at: ${promise}, reason: ${reason}`);
     await cleanupAllContainers();
     await mongoService.disconnect();
     await closeDatabase();

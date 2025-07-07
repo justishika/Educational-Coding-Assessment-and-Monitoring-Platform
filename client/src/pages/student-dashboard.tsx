@@ -770,7 +770,7 @@ export default function StudentDashboard() {
       {/* Puppeteer Auto-Screenshot Component */}
       <PuppeteerScreenshot 
         userId={user?.id}
-        codespaceUrl={codespaceUrl}
+        codespaceUrl={codespaceUrl ?? undefined}
         subject={subject}
         interval={30000} // 30 seconds
         isCodespaceActive={isInWorkspaceTab && !!codespaceUrl}
@@ -1161,7 +1161,7 @@ export default function StudentDashboard() {
             {codespaceUrl && (
                 <Codespace 
                   url={codespaceUrl} 
-                  isSessionEnded={!isSessionActive || timeLeft <= 0}
+                  isSessionEnded={!isSessionActive || (timeLeft != null && timeLeft <= 0)}
                 />
             )}
           </TabsContent>

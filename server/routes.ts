@@ -20,7 +20,7 @@ function cleanCodeContent(content: string): string {
   // First, handle the specific pattern we see in the screenshot
   let cleaned = content
     // Remove inline references that can span multiple lines
-    .replace(/inlineRef\{[^}]*\}/gs, '')
+    .replace(/inlineRef\{[^}]*\}/g, '')
     // Remove any JSON-like metadata embedded in code
     .replace(/,\s*&quot;[^"]*&quot;\s*:/g, '')
     // Remove HTML entities
@@ -377,7 +377,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ submissions: debugData });
     } catch (error) {
       console.error("🔍 Debug: Error fetching submissions:", error);
-      res.status(500).json({ message: "Failed to fetch submissions", error: error.message });
+      res.status(500).json({ 
+        message: "Failed to fetch submissions", 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      });
     }
   });
 
@@ -637,6 +640,49 @@ int main() {
       res.status(500).json({
         success: false,
         message: "Puppeteer screenshot capture failed",
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Anti-cheat violation logging endpoint
+  app.post("/api/log-violation", isAuthenticated, async (req, res) => {
+    try {
+      const userId = req.user?.id!;
+      const { type, details, severity, timestamp, userAgent } = req.body;
+      
+      console.log(`🚨 Security violation logged for user ${userId}: ${type} - ${details} (${severity})`);
+      
+      // Log to SQLite for Event Logs tab
+      try {
+        const log = insertLogSchema.parse({
+          userId: userId,
+          type: "violation",
+          data: JSON.stringify({
+            violationType: type,
+            details: details,
+            severity: severity,
+            timestamp: timestamp,
+            userAgent: userAgent,
+            method: 'anti-cheat-system'
+          })
+        });
+        await storage.createLog(log);
+        console.log(`📝 Security violation logged to Event Logs for user ${userId}: ${type}`);
+      } catch (logError) {
+        console.error('Failed to log violation to Event Logs:', logError);
+      }
+
+      res.json({
+        success: true,
+        message: "Violation logged successfully"
+      });
+      
+    } catch (error) {
+      console.error('Violation logging endpoint error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to log violation",
         error: error instanceof Error ? error.message : 'Unknown error'
       });
     }
