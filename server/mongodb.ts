@@ -313,6 +313,37 @@ class MongoDBService {
       .toArray();
   }
 
+  // Additional methods needed by hybrid-storage.ts
+  async storeSubmission(submission: any): Promise<void> {
+    const collection: Collection<any> = this.db.collection('submissions');
+    await collection.insertOne({
+      ...submission,
+      createdAt: new Date()
+    });
+  }
+
+  async storeLog(logData: Omit<MonitoringLog, '_id' | 'createdAt'>): Promise<MonitoringLog> {
+    return await this.saveLog(logData);
+  }
+
+  async getLogsByUserId(userId: number, limit: number = 100): Promise<MonitoringLog[]> {
+    return await this.getLogs(undefined, userId, limit);
+  }
+
+  async getLogsByType(type: string, limit: number = 100): Promise<MonitoringLog[]> {
+    return await this.getLogs(type, undefined, limit);
+  }
+
+  async deleteLogsByType(type: string): Promise<void> {
+    const collection: Collection<MonitoringLog> = this.db.collection('logs');
+    await collection.deleteMany({ type });
+  }
+
+  async clearAllLogs(): Promise<void> {
+    const collection: Collection<MonitoringLog> = this.db.collection('logs');
+    await collection.deleteMany({});
+  }
+
   // Statistics methods
   async getMonitoringStats(): Promise<{
     totalScreenshots: number;

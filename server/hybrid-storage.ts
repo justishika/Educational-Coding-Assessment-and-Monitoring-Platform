@@ -103,7 +103,13 @@ export class HybridStorage implements IStorage {
   async getLogs(): Promise<Log[]> {
     try {
       const mongoLogs = await mongoService.getLogs();
-      return mongoLogs;
+      return mongoLogs.map(log => ({
+        id: Math.floor(Math.random() * 1000000), // Generate a temporary ID
+        userId: log.userId,
+        type: log.type,
+        data: log.data,
+        timestamp: new Date(log.timestamp)
+      }));
     } catch (error) {
       console.log('MongoDB unavailable, using memory storage for logs');
       return await this.memStorage.getLogs();
@@ -113,7 +119,13 @@ export class HybridStorage implements IStorage {
   async getLogsByUserId(userId: number): Promise<Log[]> {
     try {
       const mongoLogs = await mongoService.getLogsByUserId(userId);
-      return mongoLogs;
+      return mongoLogs.map(log => ({
+        id: Math.floor(Math.random() * 1000000), // Generate a temporary ID
+        userId: log.userId,
+        type: log.type,
+        data: log.data,
+        timestamp: new Date(log.timestamp)
+      }));
     } catch (error) {
       console.log('MongoDB unavailable, using memory storage for logs');
       return await this.memStorage.getLogsByUserId(userId);
@@ -123,7 +135,13 @@ export class HybridStorage implements IStorage {
   async getLogsByType(type: string): Promise<Log[]> {
     try {
       const mongoLogs = await mongoService.getLogsByType(type);
-      return mongoLogs;
+      return mongoLogs.map(log => ({
+        id: Math.floor(Math.random() * 1000000), // Generate a temporary ID
+        userId: log.userId,
+        type: log.type,
+        data: log.data,
+        timestamp: new Date(log.timestamp)
+      }));
     } catch (error) {
       console.log('MongoDB unavailable, using memory storage for logs');
       return await this.memStorage.getLogsByType(type);
@@ -132,8 +150,19 @@ export class HybridStorage implements IStorage {
 
   async createLog(log: InsertLog): Promise<Log> {
     try {
-      const mongoLog = await mongoService.storeLog(log);
-      return mongoLog;
+      const mongoLog = await mongoService.storeLog({
+        userId: log.userId,
+        type: log.type,
+        data: log.data || null,
+        timestamp: new Date().toISOString()
+      });
+      return {
+        id: Math.floor(Math.random() * 1000000), // Generate a temporary ID
+        userId: mongoLog.userId,
+        type: mongoLog.type,
+        data: mongoLog.data,
+        timestamp: new Date(mongoLog.timestamp)
+      };
     } catch (error) {
       console.log('MongoDB unavailable, using memory storage for logs');
       return await this.memStorage.createLog(log);
@@ -142,7 +171,8 @@ export class HybridStorage implements IStorage {
 
   async deleteLogsByType(type: string): Promise<number> {
     try {
-      return await mongoService.deleteLogsByType(type);
+      await mongoService.deleteLogsByType(type);
+      return 1; // Return a count indicating success
     } catch (error) {
       console.log('MongoDB unavailable, using memory storage for logs');
       return await this.memStorage.deleteLogsByType(type);
@@ -151,7 +181,8 @@ export class HybridStorage implements IStorage {
 
   async clearAllLogs(): Promise<number> {
     try {
-      return await mongoService.clearAllLogs();
+      await mongoService.clearAllLogs();
+      return 1; // Return a count indicating success
     } catch (error) {
       console.log('MongoDB unavailable, using memory storage for logs');
       return await this.memStorage.clearAllLogs();

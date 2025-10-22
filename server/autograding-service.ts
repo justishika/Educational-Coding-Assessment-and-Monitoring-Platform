@@ -348,7 +348,7 @@ CRITICAL: Return ONLY the JSON object. No explanations, no markdown, no addition
         
       } catch (parseError) {
         console.error("❌ AI didn't return valid JSON - returning score 0");
-        console.error("🔍 Parse error:", parseError.message);
+        console.error("🔍 Parse error:", parseError instanceof Error ? parseError.message : String(parseError));
         console.error("📝 Full AI response:", aiResponseText);
         
         // Return default structure with score 0 instead of throwing error

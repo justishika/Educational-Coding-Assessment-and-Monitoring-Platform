@@ -150,7 +150,7 @@ export default function EventLogsViewer({ className }: EventLogsViewerProps) {
       eventType: 'screenshot' as const,
       displayTime: new Date(event.metadata.timestamp || event.createdAt),
       userEmail: getUserEmail(event.userId),
-      severity: event.metadata.captureMethod === 'puppeteer-server-side' ? 'low' : 'medium' as const,
+      severity: (event.metadata.captureMethod === 'puppeteer-server-side' ? 'low' : 'medium') as 'low' | 'medium' | 'high' | 'critical',
       description: `Screenshot captured via ${event.metadata.captureMethod}`,
       metadata: event.metadata,
       image: event.image
