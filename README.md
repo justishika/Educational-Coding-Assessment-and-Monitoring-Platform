@@ -625,3 +625,9 @@ I would like to thank the following contributors who have made this project poss
 ---
 
 **Built with ❤️ for our educational institution**
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
