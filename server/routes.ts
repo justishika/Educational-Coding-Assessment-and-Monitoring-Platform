@@ -111,6 +111,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
   setupAuth(app);
 
+  // Additional security middleware for API endpoints
+  app.use('/api', (req, res, next) => {
+    // Block common attack patterns
+    const suspiciousPatterns = [
+      /\.\./,  // Directory traversal
+      /<script/i,  // XSS attempts
+      /union.*select/i,  // SQL injection
+      /drop.*table/i,  // SQL injection
+      /javascript:/i,  // JavaScript injection
+      /onload/i,  // Event handler injection
+    ];
+    
+    const url = req.url.toLowerCase();
+    const body = JSON.stringify(req.body || {}).toLowerCase();
+    
+    for (const pattern of suspiciousPatterns) {
+      if (pattern.test(url) || pattern.test(body)) {
+        console.log(`🚨 Blocked suspicious request: ${req.method} ${req.url}`);
+        return res.status(400).json({ 
+          error: 'Invalid request detected',
+          message: 'Request blocked for security reasons'
+        });
+      }
+    }
+    
+    next();
+  });
+
   // Middleware to check if user is authenticated
   const isAuthenticated = (req: any, res: any, next: any) => {
     if (req.isAuthenticated()) {
@@ -126,6 +154,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     res.status(403).json({ message: "Forbidden" });
   };
+
+  // Health check endpoint (no authentication required)
+  app.get("/health", (req, res) => {
+    res.status(200).json({ 
+      status: "healthy", 
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime()
+    });
+  });
+
+  // Block access to common API documentation paths
+  app.get(["/api-docs", "/swagger", "/docs", "/api", "/openapi.json"], (req, res) => {
+    res.status(404).json({ 
+      error: "Not Found",
+      message: "API documentation is not publicly available"
+    });
+  });
   app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();

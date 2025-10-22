@@ -386,16 +386,24 @@ CREATE TABLE questions (
 ## 🔐 Security Features
 
 ### Authentication & Authorization
-- JWT-based authentication
+- JWT-based authentication with secure secret validation
 - Role-based access control (Student/Admin)
 - Secure password hashing
-- Session management
+- Session management with secure cookies
+- Environment variable validation
+
+### API Security
+- **Rate Limiting**: 100 requests per 15 minutes per IP
+- **Attack Detection**: Blocks common attack patterns (XSS, SQL injection, directory traversal)
+- **Security Headers**: Comprehensive security headers (HSTS, X-Frame-Options, etc.)
+- **Path Blocking**: Blocks access to API documentation and sensitive endpoints
+- **Request Logging**: Comprehensive request/response logging with IP tracking
 
 ### Anti-Cheat Measures
 - **Tab Switch Detection**: Monitors browser focus changes
 - **Screen Capture**: Automatic screenshot capture
 - **Screen Sharing**: WebRTC-based monitoring
-- **Container Isolation**: Secure code execution
+- **Container Isolation**: Secure code execution environments
 - **Activity Logging**: Comprehensive event tracking
 
 ### Data Protection
@@ -403,7 +411,16 @@ CREATE TABLE questions (
 - SQL injection prevention
 - XSS protection
 - CSRF protection
-- Secure file upload handling
+- Secure file upload handling with type validation
+- Suspicious pattern detection and blocking
+- Server information hiding
+
+### Network Security
+- HTTPS enforcement in production
+- Secure cookie configuration
+- CORS protection
+- Request size limiting
+- IP-based rate limiting
 
 ## 🤖 AI Integration
 
@@ -580,9 +597,50 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For a comprehensive walkthrough of the system, please refer to the video tutorial:
 
+## 🎥 Video Demo
+
+### Option 1: Upload to YouTube (Recommended)
+1. Upload your `mini project.mp4` to YouTube
+2. Replace `VIDEO_ID` below with your YouTube video ID
+3. The video will be embedded and playable directly in GitHub
+
 [![College Coding Lab System Demo](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
 
-*Note: Replace VIDEO_ID with the actual YouTube video ID*
+### Option 2: Use GitHub's Video Support
+GitHub supports video files directly in README files. You can:
+
+1. **Upload the video to your repository**:
+   ```bash
+   git add mini\ project.mp4
+   git commit -m "Add project demo video"
+   git push origin main
+   ```
+
+2. **Reference it in README**:
+   ```markdown
+   https://github.com/yourusername/your-repo/raw/main/mini%20project.mp4
+   ```
+
+### Option 3: Use a Video Hosting Service
+Upload your video to services like:
+- **Vimeo**: Better quality, professional appearance
+- **Loom**: Great for screen recordings
+- **Google Drive**: Share and embed
+
+### Current Video File
+Your video file is located at: `mini project.mp4` (162,959 lines - approximately 4.5MB)
+
+**Note**: For the best GitHub README experience, we recommend uploading to YouTube and using the embedded player above.
+---
+
+## 👥 Contributors
+
+I would like to thank the following contributors who have made this project possible:
+
+### Core Contributors
+- **Rifah Balquees** - Project Development & Implementation
+- **Shrinidhi Pawar** - Project Development & Implementation
+
 
 ---
 
@@ -597,4 +655,4 @@ For a comprehensive walkthrough of the system, please refer to the video tutoria
 
 ---
 
-**Built with ❤️ for educational institutions worldwide**
+**Built with ❤️ for our educational institution**

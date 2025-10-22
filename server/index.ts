@@ -5,8 +5,47 @@ import { setupVite, serveStatic, log } from "./vite";
 import { cleanupAllContainers } from "./container-manager";
 import { mongoService } from "./mongodb";
 import { initializeDatabase, closeDatabase } from "./db";
+import { 
+  createSecurityMiddleware, 
+  createAttackDetectionMiddleware, 
+  createPathBlockingMiddleware,
+  createRequestLoggingMiddleware,
+  securityConfig 
+} from "./security";
+
+// Validate required environment variables
+const requiredEnvVars = ['DATABASE_URL', 'JWT_SECRET'];
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  console.error('❌ Missing required environment variables:', missingEnvVars.join(', '));
+  console.error('Please set these variables in your .env file');
+  process.exit(1);
+}
+
+// Security warnings for development
+if (process.env.NODE_ENV === 'development') {
+  console.warn('⚠️  Running in DEVELOPMENT mode - ensure proper security in production');
+  if (process.env.JWT_SECRET === 'your_jwt_secret_key') {
+    console.warn('⚠️  Using default JWT secret - change this in production!');
+  }
+}
 
 const app = express();
+
+// Apply security middleware
+app.use(createSecurityMiddleware());
+app.use(createRequestLoggingMiddleware());
+app.use(createPathBlockingMiddleware());
+
+// Rate limiting for API endpoints
+const rateLimit = require('express-rate-limit');
+const apiLimiter = rateLimit(securityConfig.rateLimit);
+
+// Apply rate limiting to all API routes
+app.use('/api', apiLimiter);
+app.use('/api', createAttackDetectionMiddleware());
+
 // Increase payload limits for large screenshot data
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: false, limit: '50mb' }));
