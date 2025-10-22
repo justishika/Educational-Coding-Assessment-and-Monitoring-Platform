@@ -593,44 +593,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Use discussions for questions
 - Check existing issues before creating new ones
 
-### Video Tutorial
-
-For a comprehensive walkthrough of the system, please refer to the video tutorial:
-
 ## 🎥 Video Demo
 
-### Option 1: Upload to YouTube (Recommended)
-1. Upload your `mini project.mp4` to YouTube
-2. Replace `VIDEO_ID` below with your YouTube video ID
-3. The video will be embedded and playable directly in GitHub
+For a comprehensive walkthrough of the system, please refer to the video:
 
-[![College Coding Lab System Demo](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+[![College Coding Lab System Demo](https://img.youtube.com/vi/A60YM-6Puj4/maxresdefault.jpg)](https://youtu.be/A60YM-6Puj4)
 
-### Option 2: Use GitHub's Video Support
-GitHub supports video files directly in README files. You can:
-
-1. **Upload the video to your repository**:
-   ```bash
-   git add mini\ project.mp4
-   git commit -m "Add project demo video"
-   git push origin main
-   ```
-
-2. **Reference it in README**:
-   ```markdown
-   https://github.com/yourusername/your-repo/raw/main/mini%20project.mp4
-   ```
-
-### Option 3: Use a Video Hosting Service
-Upload your video to services like:
-- **Vimeo**: Better quality, professional appearance
-- **Loom**: Great for screen recordings
-- **Google Drive**: Share and embed
-
-### Current Video File
-Your video file is located at: `mini project.mp4` (162,959 lines - approximately 4.5MB)
-
-**Note**: For the best GitHub README experience, we recommend uploading to YouTube and using the embedded player above.
+*Click the image above to watch the full demo on YouTube*
 ---
 
 ## 👥 Contributors
