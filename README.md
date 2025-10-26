@@ -1,4 +1,4 @@
-# 🎓 College Coding Lab System
+# 🎓 College Coding Assessment and Monitoring Platform
 
 A comprehensive full-stack web application designed for college coding laboratories, featuring real-time monitoring, AI-powered autograding, and advanced anti-cheat capabilities.
 
