@@ -175,3 +175,20 @@ export const insertGradeSchema = createInsertSchema(grades).pick({
 
 export type InsertGrade = z.infer<typeof insertGradeSchema>;
 export type Grade = typeof grades.$inferSelect;
+
+export const studentContainer = pgTable("student_container", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  containerId: text("container_id").notNull(),
+  port: integer("port").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow()
+});
+
+export const insertStudentContainerSchema = createInsertSchema(studentContainer).pick({
+  userId: true,
+  containerId: true,
+  port: true
+});
+
+export type InsertStudentContainer = z.infer<typeof insertStudentContainerSchema>;
+export type StudentContainer = typeof studentContainer.$inferSelect;

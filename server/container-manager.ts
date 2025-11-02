@@ -2,6 +2,7 @@ import Docker from "dockerode";
 import getPort from "get-port";
 import fs from "fs";
 import path from "path";
+import { storage } from "./storage";
 
 const docker =
   process.platform === "win32"
@@ -37,8 +38,15 @@ export async function spinUpContainer(subject: string, userId: number) {
     await docker.getImage(image).inspect();
     console.log(`✅ Docker image ${image} found locally`);
   } catch (error) {
-    console.error(`❌ Docker image ${image} not found locally. Please build it first.`);
-    throw new Error(`Docker image ${image} not found. Please build the required Docker images.`);
+    await docker.buildImage({
+      context: path.join(process.cwd(), "dockerfiles"),
+      src: [path.join(process.cwd(), "dockerfiles", image)],
+    }, {
+      t: image
+    });
+    await docker.getImage(image).inspect();
+    console.log(`✅ Docker image ${image} built`);
+    console.log(`✅ Docker image ${image} found locally`);
   }
 
   const containerName = `codespace_${userId}_${Date.now()}`;
@@ -120,6 +128,19 @@ export async function spinUpContainer(subject: string, userId: number) {
   const logs = await container.logs({ stdout: true, stderr: true });
   console.log("🪵 Container logs:\n", logs.toString());
 
+  // Save container information to database
+  try {
+    await storage.createStudentContainer({
+      userId,
+      containerId,
+      port: parseInt(hostMappedPort)
+    });
+    console.log(`✅ Container info saved to database: userId=${userId}, containerId=${containerId}, port=${hostMappedPort}`);
+  } catch (error) {
+    console.error("❌ Failed to save container info to database:", error);
+    // Don't throw - container is still running, just logging failed
+  }
+
   return { url, containerId };
 }
 
@@ -142,6 +163,14 @@ export async function stopContainer(containerId: string) {
         }
         break;
       }
+    }
+
+    // Remove from database
+    try {
+      await storage.deleteStudentContainer(containerId);
+      console.log(`✅ Container removed from database: ${containerId}`);
+    } catch (error) {
+      console.error("❌ Failed to remove container from database:", error);
     }
   } catch (err) {
     console.error(`❌ Error stopping container:`, err);
@@ -166,6 +195,14 @@ export async function cleanupUserContainers(userId: number) {
   
   // Clear the user's container list
   activeContainers.delete(userId);
+
+  // Remove from database
+  try {
+    await storage.deleteStudentContainersByUserId(userId);
+    console.log(`✅ Removed all containers for user ${userId} from database`);
+  } catch (error) {
+    console.error(`❌ Failed to remove containers for user ${userId} from database:`, error);
+  }
 }
 
 /**

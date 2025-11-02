@@ -2033,6 +2033,38 @@ Good implementation of sorting logic! However, consider adding edge case handlin
     }
   });
 
+  // Get active student containers with ports (admin only)
+  app.get("/api/admin/student-containers", isAuthenticated, checkRole("admin"), async (req, res) => {
+    try {
+      console.log('🔍 Fetching active student containers...');
+      
+      // Get all active containers from database
+      const containers = await storage.getActiveStudentContainers();
+      console.log(`🔍 Found ${containers.length} active containers`);
+      
+      // Enrich with user information
+      const containersWithUsers = await Promise.all(
+        containers.map(async (container) => {
+          const user = await storage.getUser(container.userId);
+          return {
+            ...container,
+            userEmail: user?.email || 'Unknown',
+            url: `http://localhost:${container.port}`
+          };
+        })
+      );
+      
+      console.log('🔍 Sending containers with user info:', containersWithUsers);
+      res.json(containersWithUsers);
+    } catch (error) {
+      console.error('❌ Error fetching student containers:', error);
+      res.status(500).json({ 
+        message: "Failed to fetch student containers", 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      });
+    }
+  });
+
   // Get active students count (admin only) - directly from users table
   app.get("/api/admin/students/count", isAuthenticated, checkRole("admin"), async (req, res) => {
     try {

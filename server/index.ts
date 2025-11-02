@@ -119,7 +119,7 @@ app.use((req, res, next) => {
   // Serve the app on configurable port (default 3000)
   // this serves both the API and the client.
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-  server.listen(port, "localhost", () => {
+  server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
     log(`🚀 Application is running at: http://localhost:${port}`);
   });
