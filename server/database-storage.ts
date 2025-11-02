@@ -5,7 +5,8 @@ import {
   logs, type Log, type InsertLog,
   questions, type Question, type InsertQuestion,
   grades, type Grade, type InsertGrade,
-  autogrades, type Autograde, type InsertAutograde
+  autogrades, type Autograde, type InsertAutograde,
+  studentContainer, type StudentContainer, type InsertStudentContainer
 } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -193,5 +194,27 @@ async getGradesBySubmissionId(submissionId: number): Promise<Grade[]> {
   async getAutogradeById(id: number): Promise<Autograde | undefined> {
     const [autograde] = await db.select().from(autogrades).where(eq(autogrades.id, id));
     return autograde;
+  }
+
+  // Student Container methods
+  async createStudentContainer(insertContainer: InsertStudentContainer): Promise<StudentContainer> {
+    const [container] = await db.insert(studentContainer).values(insertContainer).returning();
+    return container;
+  }
+
+  async getStudentContainersByUserId(userId: number): Promise<StudentContainer[]> {
+    return await db.select().from(studentContainer).where(eq(studentContainer.userId, userId));
+  }
+
+  async getActiveStudentContainers(): Promise<StudentContainer[]> {
+    return await db.select().from(studentContainer);
+  }
+
+  async deleteStudentContainer(containerId: string): Promise<void> {
+    await db.delete(studentContainer).where(eq(studentContainer.containerId, containerId));
+  }
+
+  async deleteStudentContainersByUserId(userId: number): Promise<void> {
+    await db.delete(studentContainer).where(eq(studentContainer.userId, userId));
   }
 }

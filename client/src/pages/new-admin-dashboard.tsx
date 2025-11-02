@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import ScreenshotViewer from "@/components/admin/screenshot-viewer";
 import EventLogsViewer from "@/components/admin/event-logs-viewer";
+import ContainerMonitor from "@/components/admin/container-monitor";
 import { 
   Loader2, 
   PieChart, 
@@ -608,7 +609,7 @@ export default function AdminDashboard() {
           <div className="flex justify-center">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-pink via-purple to-blue opacity-20 blur-xl rounded-3xl"></div>
-              <TabsList className="relative grid grid-cols-3 md:grid-cols-6 gap-3 bg-background-secondary/30 backdrop-blur-xl p-3 rounded-3xl border border-border-accent shadow-2xl">
+              <TabsList className="relative grid grid-cols-3 md:grid-cols-7 gap-3 bg-background-secondary/30 backdrop-blur-xl p-3 rounded-3xl border border-border-accent shadow-2xl">
                   <TabsTrigger 
                     value="submissions" 
                   className="relative data-[state=active]:bg-gradient-pink-purple data-[state=active]:text-white data-[state=active]:shadow-glow-pink transition-all duration-500 rounded-2xl px-6 py-4 group overflow-hidden"
@@ -661,6 +662,15 @@ export default function AdminDashboard() {
                   <div className="absolute inset-0 bg-gradient-to-r from-purple/20 to-pink/20 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-500"></div>
                   <BookOpen className="h-4 w-4 mr-2 relative z-10 group-data-[state=active]:animate-pulse" />
                   <span className="relative z-10 font-bold">Questions</span>
+                  </TabsTrigger>
+
+                  <TabsTrigger 
+                    value="containers"
+                    className="relative data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue data-[state=active]:to-purple data-[state=active]:text-white data-[state=active]:shadow-glow-blue transition-all duration-500 rounded-2xl px-6 py-4 group overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue/20 to-purple/20 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-500"></div>
+                    <Monitor className="h-4 w-4 mr-2 relative z-10 group-data-[state=active]:animate-pulse" />
+                    <span className="relative z-10 font-bold">Containers</span>
                   </TabsTrigger>
                 </TabsList>
             </div>
@@ -1166,6 +1176,11 @@ export default function AdminDashboard() {
           {/* Questions Tab */}
           <TabsContent value="questions">
             <QuestionManager />
+          </TabsContent>
+
+          {/* Containers Tab */}
+          <TabsContent value="containers">
+            <ContainerMonitor />
           </TabsContent>
         </Tabs>
 

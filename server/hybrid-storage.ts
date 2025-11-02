@@ -5,7 +5,8 @@ import {
   logs, type Log, type InsertLog,
   questions, type Question, type InsertQuestion,
   grades, type Grade, type InsertGrade,
-  autogrades, type Autograde, type InsertAutograde
+  autogrades, type Autograde, type InsertAutograde,
+  studentContainer, type StudentContainer, type InsertStudentContainer
 } from "@shared/schema";
 import session from "express-session";
 import { db } from "./db";
@@ -245,5 +246,29 @@ async getAutogradesBySubmissionId(submissionId: number): Promise<Autograde[]> {
 
 async getAutogradeById(id: number): Promise<Autograde | undefined> {
   return await this.dbStorage.getAutogradeById(id);
+}
+
+// ==========================================
+// STUDENT CONTAINER METHODS - PostgreSQL
+// ==========================================
+
+async createStudentContainer(container: InsertStudentContainer): Promise<StudentContainer> {
+  return await this.dbStorage.createStudentContainer(container);
+}
+
+async getStudentContainersByUserId(userId: number): Promise<StudentContainer[]> {
+  return await this.dbStorage.getStudentContainersByUserId(userId);
+}
+
+async getActiveStudentContainers(): Promise<StudentContainer[]> {
+  return await this.dbStorage.getActiveStudentContainers();
+}
+
+async deleteStudentContainer(containerId: string): Promise<void> {
+  return await this.dbStorage.deleteStudentContainer(containerId);
+}
+
+async deleteStudentContainersByUserId(userId: number): Promise<void> {
+  return await this.dbStorage.deleteStudentContainersByUserId(userId);
 }
 }

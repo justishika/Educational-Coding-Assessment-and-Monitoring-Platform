@@ -5,7 +5,8 @@ import {
   logs, type Log, type InsertLog,
   questions, type Question, type InsertQuestion,
   grades, type Grade, type InsertGrade,
-  autogrades, type Autograde, type InsertAutograde
+  autogrades, type Autograde, type InsertAutograde,
+  studentContainer, type StudentContainer, type InsertStudentContainer
 } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
@@ -61,6 +62,13 @@ export interface IStorage {
   getAutogradesByUserId(userId: number): Promise<Autograde[]>;
   getAutogradesBySubmissionId(submissionId: number): Promise<Autograde[]>;
   getAutogradeById(id: number): Promise<Autograde | undefined>;
+
+  // Student Container methods
+  createStudentContainer(container: InsertStudentContainer): Promise<StudentContainer>;
+  getStudentContainersByUserId(userId: number): Promise<StudentContainer[]>;
+  getActiveStudentContainers(): Promise<StudentContainer[]>;
+  deleteStudentContainer(containerId: string): Promise<void>;
+  deleteStudentContainersByUserId(userId: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -70,6 +78,7 @@ export class MemStorage implements IStorage {
   private logs: Map<number, Log>;
   private grades: Map<number, Grade>;
   private autogrades: Map<number, Autograde>;
+  private studentContainers: Map<string, StudentContainer>;
   sessionStore: any; // Using any for session store type
   currentUserId: number;
   currentSubmissionId: number;
@@ -77,6 +86,7 @@ export class MemStorage implements IStorage {
   currentLogId: number;
   currentGradeId: number;
   currentAutogradeId: number;
+  currentStudentContainerId: number;
 
   constructor() {
     this.users = new Map();
@@ -85,6 +95,7 @@ export class MemStorage implements IStorage {
     this.logs = new Map();
     this.grades = new Map();
     this.autogrades = new Map();
+    this.studentContainers = new Map();
     this.sessionStore = {
       get: () => {},
       set: () => {},
@@ -96,6 +107,7 @@ export class MemStorage implements IStorage {
     this.currentLogId = 1;
     this.currentGradeId = 1;
     this.currentAutogradeId = 1;
+    this.currentStudentContainerId = 1;
   }
 
   // User methods
@@ -306,6 +318,40 @@ export class MemStorage implements IStorage {
 
   async getAutogradeById(id: number): Promise<Autograde | undefined> {
     return this.autogrades.get(id);
+  }
+
+  // Student Container methods
+  async createStudentContainer(insertContainer: InsertStudentContainer): Promise<StudentContainer> {
+    const id = this.currentStudentContainerId++;
+    const createdAt = new Date();
+    const container: StudentContainer = { 
+      ...insertContainer, 
+      id, 
+      createdAt
+    };
+    this.studentContainers.set(insertContainer.containerId, container);
+    return container;
+  }
+
+  async getStudentContainersByUserId(userId: number): Promise<StudentContainer[]> {
+    return Array.from(this.studentContainers.values()).filter(
+      (container) => container.userId === userId
+    );
+  }
+
+  async getActiveStudentContainers(): Promise<StudentContainer[]> {
+    return Array.from(this.studentContainers.values());
+  }
+
+  async deleteStudentContainer(containerId: string): Promise<void> {
+    this.studentContainers.delete(containerId);
+  }
+
+  async deleteStudentContainersByUserId(userId: number): Promise<void> {
+    const userContainers = Array.from(this.studentContainers.values()).filter(
+      (container) => container.userId === userId
+    );
+    userContainers.forEach(container => this.studentContainers.delete(container.containerId));
   }
 }
 
